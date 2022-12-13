@@ -1,5 +1,6 @@
 import os
 import json
+import csv
 import requests
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
@@ -14,12 +15,46 @@ URLeaston = 'https://www.bankofeaston.com/mortgage-rates/'
 URLcanton = 'https://cantoncoopbank.mortgagewebcenter.com/'
 URLsharon = 'https://www.scucu.com/personal/rates/mortgage-rates'
 URLsouthshore = 'https://quickquote-consumer.optimalblue.com/api/featuredRates/indications/7d856416-fbc5-4385-80dd-3acf193ada60'
+URLcantonagain = 'https://www.thebankofcanton.com/rates/'
+URLstoughton = 'https://www.stoughtoncoop.bank/resources/rates-calculators/mortgage-rate/'
 
-tableAbington = []
+tableAbington = dict()
 tableEaston = []
 tableCanton = []
 tableSharon = []
 tableSouthShore = []
+tableCantonAgain = [] 
+tableStoughton = []
+
+def printTables():
+    for k in tableAbington:
+        print("Abington:")
+        print(k)
+        print("----------------")
+    for k in tableEaston:
+        print("Easton:")
+        print(k)
+        print("----------------")
+    for k in tableCanton:
+        print("Canton:")
+        print(k)
+        print("----------------")
+    for k in tableSharon:
+        print("Sharon:")
+        print(k)
+        print("----------------")
+    for k in tableSouthShore:
+        print("SouthShore:")
+        print(k)
+        print("----------------")
+    for k in tableCantonAgain:
+        print("CantonAgain:")
+        print(k)
+        print("----------------")
+    for k in tableStoughton:
+        print("Stoughton:")
+        print(k)
+        print("----------------")
 
 def remove_tags(html):
     html = str(html)
@@ -54,7 +89,7 @@ def getWebPage(url):
 def get_web_json(url):
    request = requests.get(url)
    text = request.text 
-   return text
+   return json.loads(text)
 
 def makeFile(filename, data):
     if (os.path.exists(filename)):
@@ -83,86 +118,158 @@ def bankofabington(url):
     content = openFile(filename, url)
     soup = BeautifulSoup(str(content), 'html.parser')
     # 30 year mortage fixed 0 points 
-    results = soup.table.find_all('tr')[2].find_all('td')[1]
+    thirtyYearMortage = soup.table.find_all('tr')[2].find_all('td')[1]
     # 20 year mortage fixed 0 points 
-    results2 = soup.table.find_all('tr')[4].find_all('td')[1]
+    twentyYearMortage = soup.table.find_all('tr')[4].find_all('td')[1]
     # 15 year mortage fixed 0 points
-    results3 = soup.table.find_all('tr')[6].find_all('td')[1]
-    # 3yr ARM 0 Pts 
-    results4 = soup.find_all('table')[2].find_all('tr')[2].find_all('td')[1]
+    fifteenYearMortage = soup.table.find_all('tr')[6].find_all('td')[1]
+    # 3/3 ARM 0 Pts 
+    threeThreeArm = soup.find_all('table')[2].find_all('tr')[2].find_all('td')[1]
     # 5/5 ARM
-    results5 = soup.find_all('table')[2].find_all('tr')[3].find_all('td')[1]
-    tableAbington.append([remove_tags(results), remove_tags(results2), remove_tags(results3), remove_tags(results4), remove_tags(results5)])
-    for k in tableAbington:
-        print(k)
+    fiveFiveArm = soup.find_all('table')[2].find_all('tr')[3].find_all('td')[1]
+    # 7/3 ARM 
+    sevenThreeArm = soup.find_all('table')[2].find_all('tr')[1].find_all('td')[1]
+
+    tableAbington['30 year mortage'] = remove_tags(thirtyYearMortage)
+    tableAbington['20 year mortage'] = remove_tags(twentyYearMortage)
+    tableAbington['15 year mortage'] = remove_tags(fifteenYearMortage)
+    tableAbington['3/3 ARM'] = remove_tags(threeThreeArm)
+    tableAbington['5/5 ARM'] = remove_tags(fiveFiveArm)
+    tableAbington['7/3 ARM'] = remove_tags(sevenThreeArm)
+
     
 def bankofeaston(url):
     filename = 'bankofeaston.txt'
     content = openFile(filename, url)
     soup = BeautifulSoup(str(content), 'html.parser')
     # 30 year mortage fixed 0 points 
-    results = soup.find_all('table')[1].find_all('tr')[4].find_all('td')[1]
+    thirtyYearMortage = soup.find_all('table')[1].find_all('tr')[4].find_all('td')[1]
     # 20 year mortage fixed 0 points
-    results2 = soup.find_all('table')[1].find_all('tr')[3].find_all('td')[1]
+    twentyYearMortage = soup.find_all('table')[1].find_all('tr')[3].find_all('td')[1]
     # 15 year mortage fixed 0 points
-    results3 = soup.find_all('table')[1].find_all('tr')[2].find_all('td')[1]
+    fifteenYearMortage = soup.find_all('table')[1].find_all('tr')[2].find_all('td')[1]
     # 10 year mortage fixed 0 points
-    results4 = soup.find_all('table')[1].find_all('tr')[1].find_all('td')[1]
+    tenYearMortage = soup.find_all('table')[1].find_all('tr')[1].find_all('td')[1]
     #5/1 ARM
-    results5 = soup.find_all('table')[3].find_all('tr')[1].find_all('td')[1]
+    fiveOneArm = soup.find_all('table')[3].find_all('tr')[1].find_all('td')[1]
     #7/1 ARM
-    results6 = soup.find_all('table')[3].find_all('tr')[2].find_all('td')[1]
-    tableEaston.append([remove_tags(results), remove_tags(results2), remove_tags(results3), remove_tags(results4), remove_tags(results5), remove_tags(results6)])
-    for k in tableEaston:
-        print(k)
+    SevenOneArm = soup.find_all('table')[3].find_all('tr')[2].find_all('td')[1]
+    tableEaston.append([remove_tags(thirtyYearMortage), remove_tags(twentyYearMortage), remove_tags(fifteenYearMortage), remove_tags(tenYearMortage), remove_tags(fiveOneArm), remove_tags(SevenOneArm)])
+
     
 def bankofcanton(url):
     filename = 'bankofcanton.txt'
     content = openFile(filename, url)
     soup = BeautifulSoup(str(content), 'html.parser')
     # 30 year mortage fixed 0 points 
-    results = soup.find_all('table')[0].find_all('tr')[3].find_all('td')[0]
+    thirtyYearMortage = soup.find_all('table')[0].find_all('tr')[3].find_all('td')[0]
     # 15 year mortage fixed 0 points
-    results2 = soup.find_all('table')[0].find_all('tr')[6].find_all('td')[0]
+    fifteenYearMortage = soup.find_all('table')[0].find_all('tr')[6].find_all('td')[0]
     #5/1 ARM 
-    results3 = soup.find_all('table')[0].find_all('tr')[9].find_all('td')[0]
-    tableCanton.append([remove_tags(results), remove_tags(results2), remove_tags(results3)])
-    for k in tableCanton:
-        print(k)
+    fiveOneArm = soup.find_all('table')[0].find_all('tr')[9].find_all('td')[0]
+    tableCanton.append([remove_tags(thirtyYearMortage), remove_tags(fifteenYearMortage), remove_tags(fiveOneArm)])
 
 
 def bankofsharon(url):
     filename = 'bankofsharon.txt'
     content = openFile(filename, url)
     soup = BeautifulSoup(str(content), 'html.parser')
-    # 15 year mortage 0 points 
-    results = soup.find_all(class_='content_rates_table')[0].find_all('tr')[5].find_all('td')[1]
-    # 20 year mortage 0 points 
-    results2 = soup.find_all(class_='content_rates_table')[0].find_all('tr')[7].find_all('td')[1]
     # 30 year mortage 0 points 
-    results3 = soup.find_all(class_='content_rates_table')[0].find_all('tr')[9].find_all('td')[1]
+    thirtyYearMortage = soup.find_all(class_='content_rates_table')[0].find_all('tr')[9].find_all('td')[1]
+    # 20 year mortage 0 points 
+    twentyYearMortage = soup.find_all(class_='content_rates_table')[0].find_all('tr')[7].find_all('td')[1]
+    # 15 year mortage 0 points 
+    fifteenYearMortage = soup.find_all(class_='content_rates_table')[0].find_all('tr')[5].find_all('td')[1]
     #3/1 ARM 0 points 
-    results4 = soup.find_all(class_='content_rates_table')[3].find_all('tr')[5].find_all('td')[1]
+    threeOneArm = soup.find_all(class_='content_rates_table')[3].find_all('tr')[5].find_all('td')[1]
     #5/1 ARM 0 points 
-    results5 = soup.find_all(class_='content_rates_table')[3].find_all('tr')[7].find_all('td')[1]
+    fiveOneArm = soup.find_all(class_='content_rates_table')[3].find_all('tr')[7].find_all('td')[1]
     #7/1 ARM 0 points 
-    results6 = soup.find_all(class_='content_rates_table')[3].find_all('tr')[9].find_all('td')[1]
+    sevenOneArm = soup.find_all(class_='content_rates_table')[3].find_all('tr')[9].find_all('td')[1]
     #10/1 ARM 0 points 
-    results7 = soup.find_all(class_='content_rates_table')[3].find_all('tr')[11].find_all('td')[1]
+    tenOneArm = soup.find_all(class_='content_rates_table')[3].find_all('tr')[11].find_all('td')[1]
     #15/1 ARM 0 points 
-    results8 = soup.find_all(class_='content_rates_table')[3].find_all('tr')[13].find_all('td')[1]
-    tableSharon.append([remove_tags(results), remove_tags(results2), remove_tags(results3), remove_tags(results4), remove_tags(results5), remove_tags(results6), remove_tags(results7), remove_tags(results8)])
-    for k in tableSharon:
-        print(k)
+    fifteenOneArm = soup.find_all(class_='content_rates_table')[3].find_all('tr')[13].find_all('td')[1]
+    tableSharon.append([remove_tags(thirtyYearMortage), remove_tags(twentyYearMortage), remove_tags(fifteenYearMortage), remove_tags(threeOneArm), remove_tags(fiveOneArm), remove_tags(sevenOneArm), remove_tags(tenOneArm), remove_tags(fifteenOneArm)])
+
+
 def bankofsouthshore(url):
-    print(get_web_json(url))
+    data = get_web_json(url)
+    # 30 year fixed 0 points
+    thirtyYearMortage = data['$values'][0]['indicatorRate']
+    # 20 year fixed 0 points
+    twentyYearMortage = data['$values'][1]['indicatorRate']
+    # 15 year fixed 0 points
+    fifteenYearMortage = data['$values'][2]['indicatorRate']
+    # 10 year fixed 0 points
+    tenYearMortage = data['$values'][3]['indicatorRate']
+    # 10/5 ARM 0 points 
+    tenFiveArm = data['$values'][4]['indicatorRate']
+    tableSouthShore.append([thirtyYearMortage, twentyYearMortage, fifteenYearMortage, tenYearMortage, tenFiveArm])
+
+def bankfofcantonagain(url):
+    filename = 'bankofcantonagain.txt'
+    content = openFile(filename, url)
+    soup = BeautifulSoup(str(content), 'html.parser')
+    # 30 year mortage fixed 0 points 
+    thirtyYearMortage = soup.find_all('table')[4].find_all('tr')[1].find_all('td')[2]
+   # 15 year mortage fixed 0 points
+    fifteenYearMortage = soup.find_all('table')[4].find_all('tr')[3].find_all('td')[2]
+    tableCanton.append([remove_tags(thirtyYearMortage), remove_tags(fifteenYearMortage)])
+
+def bankofstoughton(url):
+    filename = 'bankofstoughton.txt'
+    content = openFile(filename, url)
+    soup = BeautifulSoup(str(content), 'html.parser')
+     # 30 year mortage fixed 0 points 
+    thirtyYearMortage = soup.find_all('table')[0].find_all('tr')[1].find_all('td')[2]
+    # 20 year mortage fixed 0 points
+    twentyYearMortage = soup.find_all('table')[0].find_all('tr')[4].find_all('td')[2]
+    # 15 year mortage fixed 0 points
+    fifteenYearMortage = soup.find_all('table')[0].find_all('tr')[7].find_all('td')[2]
+    # 10 year mortage fixed 0 points
+    tenYearMortage = soup.find_all('table')[0].find_all('tr')[10].find_all('td')[2]
+    tableStoughton.append([remove_tags(thirtyYearMortage), remove_tags(twentyYearMortage), remove_tags(fifteenYearMortage), remove_tags(tenYearMortage)])
+
+def writetoCSV(table):
+    filename = 'out.csv'
+    if os.path.exists(filename):
+        os.remove(filename)
+    else:
+        print("File does not exist.")
+    with open(filename, 'w', newline='') as resultFile:
+        fieldnames = []
+        values = []
+        output = csv.writer(resultFile, dialect = 'excel')
+        for k,v in table.items():
+            fieldnames = []
+            fieldnames.append([k])
+        output.writerows(fieldnames)
+        for k,v in table.items():
+            values = []
+            values.append([v])
+            print(values)
+        output.writerows(values)
+
+
+
+
+    
+
 
 
     
 
 bankofabington(URLabington)
-bankofeaston(URLeaston)
-bankofcanton(URLcanton)
-bankofsharon(URLsharon)
-
+#bankofeaston(URLeaston)
+#bankofcanton(URLcanton)
+#bankofsharon(URLsharon)
 #bankofsouthshore(URLsouthshore)
+#bankfofcantonagain(URLcantonagain)
+#bankofstoughton(URLstoughton)
+
+#printTables()
+
+writetoCSV(tableAbington)
+
+
