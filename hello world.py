@@ -22,21 +22,41 @@ abington = "bankofabington.txt"
 easton = "bankofeaston.txt"
 canton = "bankofcanton.txt"
 sharon = "bankofsharon.txt"
+southshore = "bankofsouthshore.txt"
 cantonagain = "bankofcantonagain.txt"
 stoughton = "bankofstoughton.txt"
 
-tableAbington = dict()
-tableEaston = []
-tableCanton = []
-tableSharon = []
-tableSouthShore = []
-tableCantonAgain = [] 
-tableStoughton = []
+tableRates = {'30 year mortage' : '', 
+            '20 year mortage' : '', 
+            '15 year mortage' : '', 
+            '10 year mortage' : '', 
+            '3/1 ARM' : '', 
+            '5/1 ARM' : '', 
+            '7/1 ARM' : '', 
+            '10/1 ARM' : '', 
+            '15/1 ARM' : '', 
+            '3/3 ARM' : '', 
+            '5/5 ARM' : '', 
+            '5/3 ARM' : '',
+            '7/3 ARM' : '', 
+            '10/5 ARM': ''}
+
+
+tableAbington = tableRates.copy()
+tableEaston = tableRates.copy()
+tableCanton = tableRates.copy()
+tableSharon = tableRates.copy()
+tableSouthShore = tableRates.copy()
+tableCantonAgain = tableRates.copy()
+tableStoughton = tableRates.copy()
+
+
+
 
 def printTable(table, tablename):
-    for k in table:
+    for k,v in table.items():
         print(tablename, ":")
-        print(k)
+        print(k , " ", v)
         print("----------------")
 
 def remove_tags(html):
@@ -110,24 +130,24 @@ def writetoCSV(table):
 def abingtonData(filename):
     soup = BeautifulSoup(str(readFile(filename)), 'html.parser')
     # 30 year mortage fixed 0 points 
-    thirtyYearMortage = soup.table.find_all('tr')[2].find_all('td')[1]
+    thirtyYeARMortage = soup.table.find_all('tr')[2].find_all('td')[1]
     # 20 year mortage fixed 0 points 
-    twentyYearMortage = soup.table.find_all('tr')[4].find_all('td')[1]
+    twentyYeARMortage = soup.table.find_all('tr')[4].find_all('td')[1]
     # 15 year mortage fixed 0 points
-    fifteenYearMortage = soup.table.find_all('tr')[6].find_all('td')[1]
+    fifteenYeARMortage = soup.table.find_all('tr')[6].find_all('td')[1]
     # 3/3 ARM 0 Pts 
-    threeThreeArm = soup.find_all('table')[2].find_all('tr')[2].find_all('td')[1]
+    threeThreeARM = soup.find_all('table')[2].find_all('tr')[2].find_all('td')[1]
     # 5/5 ARM
-    fiveFiveArm = soup.find_all('table')[2].find_all('tr')[3].find_all('td')[1]
+    fiveFiveARM = soup.find_all('table')[2].find_all('tr')[3].find_all('td')[1]
     # 7/3 ARM 
-    sevenThreeArm = soup.find_all('table')[2].find_all('tr')[1].find_all('td')[1]
+    sevenThreeARM = soup.find_all('table')[2].find_all('tr')[1].find_all('td')[1]
 
-    tableAbington['30 year mortage'] = remove_tags(thirtyYearMortage)
-    tableAbington['20 year mortage'] = remove_tags(twentyYearMortage)
-    tableAbington['15 year mortage'] = remove_tags(fifteenYearMortage)
-    tableAbington['3/3 ARM'] = remove_tags(threeThreeArm)
-    tableAbington['5/5 ARM'] = remove_tags(fiveFiveArm)
-    tableAbington['7/3 ARM'] = remove_tags(sevenThreeArm)
+    tableAbington['30 year mortage'] = remove_tags(thirtyYeARMortage)
+    tableAbington['20 year mortage'] = remove_tags(twentyYeARMortage)
+    tableAbington['15 year mortage'] = remove_tags(fifteenYeARMortage)
+    tableAbington['3/3 ARM'] = remove_tags(threeThreeARM)
+    tableAbington['5/5 ARM'] = remove_tags(fiveFiveARM)
+    tableAbington['7/3 ARM'] = remove_tags(sevenThreeARM)
 
     
 def eastonData(filename):
@@ -135,85 +155,121 @@ def eastonData(filename):
     # 30 year mortage fixed 0 points 
     thirtyYearMortage = soup.find_all('table')[1].find_all('tr')[4].find_all('td')[1]
     # 20 year mortage fixed 0 points
-    twentyYearMortage = soup.find_all('table')[1].find_all('tr')[3].find_all('td')[1]
+    twentyYeARMortage = soup.find_all('table')[1].find_all('tr')[3].find_all('td')[1]
     # 15 year mortage fixed 0 points
-    fifteenYearMortage = soup.find_all('table')[1].find_all('tr')[2].find_all('td')[1]
+    fifteenYeARMortage = soup.find_all('table')[1].find_all('tr')[2].find_all('td')[1]
     # 10 year mortage fixed 0 points
-    tenYearMortage = soup.find_all('table')[1].find_all('tr')[1].find_all('td')[1]
+    tenYeARMortage = soup.find_all('table')[1].find_all('tr')[1].find_all('td')[1]
     #5/1 ARM
-    fiveOneArm = soup.find_all('table')[3].find_all('tr')[1].find_all('td')[1]
+    fiveOneARM = soup.find_all('table')[3].find_all('tr')[1].find_all('td')[1]
     #7/1 ARM
-    SevenOneArm = soup.find_all('table')[3].find_all('tr')[2].find_all('td')[1]
-    tableEaston.append([remove_tags(thirtyYearMortage), remove_tags(twentyYearMortage), remove_tags(fifteenYearMortage), remove_tags(tenYearMortage), remove_tags(fiveOneArm), remove_tags(SevenOneArm)])
+    SevenOneARM = soup.find_all('table')[3].find_all('tr')[2].find_all('td')[1]
+
+    tableEaston['30 year mortage'] = remove_tags(thirtyYearMortage)
+    tableEaston['20 year mortage'] = remove_tags(twentyYeARMortage)
+    tableEaston['15 year mortage'] = remove_tags(fifteenYeARMortage)
+    tableEaston['10 year mortage'] = remove_tags(tenYeARMortage)
+    tableEaston['5/1 ARM'] = remove_tags(fiveOneARM)
+    tableEaston['7/1 ARM'] = remove_tags(SevenOneARM)
 
     
 def cantonData(filename):
     soup = BeautifulSoup(str(readFile(filename)), 'html.parser')
     # 30 year mortage fixed 0 points 
-    thirtyYearMortage = soup.find_all('table')[0].find_all('tr')[3].find_all('td')[0]
+    thirtyYeARMortage = soup.find_all('table')[0].find_all('tr')[3].find_all('td')[0]
     # 15 year mortage fixed 0 points
-    fifteenYearMortage = soup.find_all('table')[0].find_all('tr')[6].find_all('td')[0]
+    fifteenYeARMortage = soup.find_all('table')[0].find_all('tr')[6].find_all('td')[0]
     #5/1 ARM 
-    fiveOneArm = soup.find_all('table')[0].find_all('tr')[9].find_all('td')[0]
-    tableCanton.append([remove_tags(thirtyYearMortage), remove_tags(fifteenYearMortage), remove_tags(fiveOneArm)])
+    fiveOneARM = soup.find_all('table')[0].find_all('tr')[9].find_all('td')[0]
 
+    tableCanton['30 year mortage'] = remove_tags(thirtyYeARMortage)
+    tableCanton['15 year mortage'] = remove_tags(fifteenYeARMortage)
+    tableCanton['5/1 ARM'] = remove_tags(fiveOneARM)
 
 def sharonData(filename):
     soup = BeautifulSoup(readFile(filename), 'html.parser')
     # 30 year mortage 0 points 
-    thirtyYearMortage = soup.find_all(class_='content_rates_table')[0].find_all('tr')[9].find_all('td')[1]
+    thirtyYeARMortage = soup.find_all(class_='content_rates_table')[0].find_all('tr')[9].find_all('td')[1]
     # 20 year mortage 0 points 
-    twentyYearMortage = soup.find_all(class_='content_rates_table')[0].find_all('tr')[7].find_all('td')[1]
+    twentyYeARMortage = soup.find_all(class_='content_rates_table')[0].find_all('tr')[7].find_all('td')[1]
     # 15 year mortage 0 points 
-    fifteenYearMortage = soup.find_all(class_='content_rates_table')[0].find_all('tr')[5].find_all('td')[1]
+    fifteenYeARMortage = soup.find_all(class_='content_rates_table')[0].find_all('tr')[5].find_all('td')[1]
     #3/1 ARM 0 points 
-    threeOneArm = soup.find_all(class_='content_rates_table')[3].find_all('tr')[5].find_all('td')[1]
+    threeOneARM = soup.find_all(class_='content_rates_table')[3].find_all('tr')[5].find_all('td')[1]
     #5/1 ARM 0 points 
-    fiveOneArm = soup.find_all(class_='content_rates_table')[3].find_all('tr')[7].find_all('td')[1]
+    fiveOneARM = soup.find_all(class_='content_rates_table')[3].find_all('tr')[7].find_all('td')[1]
     #7/1 ARM 0 points 
-    sevenOneArm = soup.find_all(class_='content_rates_table')[3].find_all('tr')[9].find_all('td')[1]
+    sevenOneARM = soup.find_all(class_='content_rates_table')[3].find_all('tr')[9].find_all('td')[1]
     #10/1 ARM 0 points 
-    tenOneArm = soup.find_all(class_='content_rates_table')[3].find_all('tr')[11].find_all('td')[1]
+    tenOneARM = soup.find_all(class_='content_rates_table')[3].find_all('tr')[11].find_all('td')[1]
     #15/1 ARM 0 points 
-    fifteenOneArm = soup.find_all(class_='content_rates_table')[3].find_all('tr')[13].find_all('td')[1]
-    tableSharon.append([remove_tags(thirtyYearMortage), remove_tags(twentyYearMortage), remove_tags(fifteenYearMortage), remove_tags(threeOneArm), remove_tags(fiveOneArm), remove_tags(sevenOneArm), remove_tags(tenOneArm), remove_tags(fifteenOneArm)])
+    fifteenOneARM = soup.find_all(class_='content_rates_table')[3].find_all('tr')[13].find_all('td')[1]
+
+    tableSharon['30 year mortage'] = remove_tags(thirtyYeARMortage)
+    tableSharon['20 year mortage'] = remove_tags(twentyYeARMortage)
+    tableSharon['15 year mortage'] = remove_tags(fifteenYeARMortage)
+    tableSharon['3/1 ARM'] = remove_tags(threeOneARM)
+    tableSharon['5/1 ARM'] = remove_tags(fiveOneARM)
+    tableSharon['7/1 ARM'] = remove_tags(sevenOneARM)
+    tableSharon['10/1 ARM'] = remove_tags(tenOneARM)
+    tableSharon['15/1 ARM'] = remove_tags(fifteenOneARM)
 
 
 def southshoreData(url):
     data = getWebPage(url)
     # 30 year fixed 0 points
-    thirtyYearMortage = data['$values'][0]['indicatorRate']
+    thirtyYeARMortage = data['$values'][0]['indicatorRate']
     # 20 year fixed 0 points
-    twentyYearMortage = data['$values'][1]['indicatorRate']
+    twentyYeARMortage = data['$values'][1]['indicatorRate']
     # 15 year fixed 0 points
-    fifteenYearMortage = data['$values'][2]['indicatorRate']
+    fifteenYeARMortage = data['$values'][2]['indicatorRate']
     # 10 year fixed 0 points
-    tenYearMortage = data['$values'][3]['indicatorRate']
+    tenYeARMortage = data['$values'][3]['indicatorRate']
     # 10/5 ARM 0 points 
-    tenFiveArm = data['$values'][4]['indicatorRate']
-    tableSouthShore.append([thirtyYearMortage, twentyYearMortage, fifteenYearMortage, tenYearMortage, tenFiveArm])
+    tenFiveARM = data['$values'][4]['indicatorRate']
+
+    tableSouthShore['30 year mortage'] = thirtyYeARMortage
+    tableSouthShore['20 year mortage'] = twentyYeARMortage
+    tableSouthShore['15 year mortage'] = fifteenYeARMortage
+    tableSouthShore['10 year mortage'] = tenYeARMortage
+    tableSouthShore['10/5 ARM'] = tenFiveARM
 
 def cantonagainData(filename):
     soup = BeautifulSoup(readFile(filename), 'html.parser')
     # 30 year mortage fixed 0 points 
-    thirtyYearMortage = soup.find_all('table')[4].find_all('tr')[1].find_all('td')[2]
+    thirtyYeARMortage = soup.find_all('table')[4].find_all('tr')[1].find_all('td')[2]
    # 15 year mortage fixed 0 points
-    fifteenYearMortage = soup.find_all('table')[4].find_all('tr')[3].find_all('td')[2]
-    tableCantonAgain.append([remove_tags(thirtyYearMortage), remove_tags(fifteenYearMortage)])
+    fifteenYeARMortage = soup.find_all('table')[4].find_all('tr')[3].find_all('td')[2]
+    tableCantonAgain['30 year mortage'] = remove_tags(thirtyYeARMortage)
+    tableCantonAgain['15 year mortage'] = remove_tags(fifteenYeARMortage)
 
 def stoughtonData(filename):
     soup = BeautifulSoup(readFile(filename), 'html.parser')
      # 30 year mortage fixed 0 points 
-    thirtyYearMortage = soup.find_all('table')[0].find_all('tr')[1].find_all('td')[2]
+    thirtyYeARMortage = soup.find_all('table')[0].find_all('tr')[1].find_all('td')[2]
     # 20 year mortage fixed 0 points
-    twentyYearMortage = soup.find_all('table')[0].find_all('tr')[4].find_all('td')[2]
+    twentyYeARMortage = soup.find_all('table')[0].find_all('tr')[4].find_all('td')[2]
     # 15 year mortage fixed 0 points
-    fifteenYearMortage = soup.find_all('table')[0].find_all('tr')[7].find_all('td')[2]
+    fifteenYeARMortage = soup.find_all('table')[0].find_all('tr')[7].find_all('td')[2]
     # 10 year mortage fixed 0 points
-    tenYearMortage = soup.find_all('table')[0].find_all('tr')[10].find_all('td')[2]
-    tableStoughton.append([remove_tags(thirtyYearMortage), remove_tags(twentyYearMortage), remove_tags(fifteenYearMortage), remove_tags(tenYearMortage)])
-
-
+    tenYeARMortage = soup.find_all('table')[0].find_all('tr')[10].find_all('td')[2]
+    # 3/1 ARM
+    threeOneARM = soup.find_all('table')[1].find_all('tr')[1].find_all('td')[2]
+    # 5/1 ARM
+    fiveOneARM = soup.find_all('table')[1].find_all('tr')[4].find_all('td')[2]
+    # 7/1 ARM
+    sevenOneARM = soup.find_all('table')[1].find_all('tr')[7].find_all('td')[2]
+    # 5/3 ARM 
+    fiveThreeARM = soup.find_all('table')[1].find_all('tr')[10].find_all('td')[2]
+   
+    tableStoughton['30 year mortage'] = remove_tags(thirtyYeARMortage)
+    tableStoughton['20 year mortage'] = remove_tags(twentyYeARMortage)
+    tableStoughton['15 year mortage'] = remove_tags(fifteenYeARMortage)
+    tableStoughton['10 year mortage'] = remove_tags(tenYeARMortage)
+    tableStoughton['3/1 ARM'] = remove_tags(threeOneARM)
+    tableStoughton['5/1 ARM'] = remove_tags(fiveOneARM)
+    tableStoughton['7/1 ARM'] = remove_tags(sevenOneARM)
+    tableStoughton['5/3 ARM'] = remove_tags(fiveThreeARM)
 
 
 
@@ -221,7 +277,7 @@ def stoughtonData(filename):
     
 
 
-# ------- abington ------------
+""" # ------- abington ------------
 makeFile(abington, URLabington)
 abingtonData(abington)
 printTable(tableAbington, abington)
@@ -245,12 +301,8 @@ printTable(tableSouthShore, "South Shore")
 makeFile(cantonagain, URLcantonagain)
 cantonagainData(cantonagain)
 printTable(tableCantonAgain, "Canton, again.")
-# ------- Stoughton ------------
+# ------- Stoughton ------------"""
 makeFile(stoughton, URLstoughton)
 stoughtonData(stoughton)
-printTable(tableStoughton, " Stoughton: ")
-
-
-#writetoCSV(tableAbington)
-
+printTable(tableStoughton ,stoughton)
 
