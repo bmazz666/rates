@@ -1,10 +1,12 @@
 import os
 import json
+import xlsxwriter
 import csv
 import requests
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 import time
+from datetime import datetime
 from bs4 import BeautifulSoup
 
 path = 'P:\IT\Bmazzella\Coding'
@@ -106,25 +108,6 @@ def readFile(filename):
     with open(filename, 'r', errors='ignore') as file:
         return file.read()
 
-def writetoCSV(table):
-    filename = 'out.csv'
-    if os.path.exists(filename):
-        os.remove(filename)
-    else:
-        print("File does not exist.")
-    with open(filename, 'w', newline='') as resultFile:
-        fieldnames = []
-        values = []
-        output = csv.writer(resultFile, dialect = 'excel')
-        for k,v in table.items():
-            fieldnames = []
-            fieldnames.append([k])
-        output.writerows(fieldnames)
-        for k,v in table.items():
-            values = []
-            values.append([v])
-            print(values)
-        output.writerows(values)
 
 # ----------------------------- Below are specific data extracting functions for each website, subject to change.
 def abingtonData(filename):
@@ -172,7 +155,7 @@ def eastonData(filename):
     tableEaston['5/1 ARM'] = remove_tags(fiveOneARM)
     tableEaston['7/1 ARM'] = remove_tags(SevenOneARM)
 
-    
+   
 def cantonData(filename):
     soup = BeautifulSoup(str(readFile(filename)), 'html.parser')
     # 30 year mortage fixed 0 points 
@@ -228,11 +211,11 @@ def southshoreData(url):
     # 10/5 ARM 0 points 
     tenFiveARM = data['$values'][4]['indicatorRate']
 
-    tableSouthShore['30 year mortage'] = thirtyYeARMortage
-    tableSouthShore['20 year mortage'] = twentyYeARMortage
-    tableSouthShore['15 year mortage'] = fifteenYeARMortage
-    tableSouthShore['10 year mortage'] = tenYeARMortage
-    tableSouthShore['10/5 ARM'] = tenFiveARM
+    tableSouthShore['30 year mortage'] = str(thirtyYeARMortage)
+    tableSouthShore['20 year mortage'] = str(twentyYeARMortage)
+    tableSouthShore['15 year mortage'] = str(fifteenYeARMortage)
+    tableSouthShore['10 year mortage'] = str(tenYeARMortage)
+    tableSouthShore['10/5 ARM'] = str(tenFiveARM)
 
 def cantonagainData(filename):
     soup = BeautifulSoup(readFile(filename), 'html.parser')
@@ -272,37 +255,56 @@ def stoughtonData(filename):
     tableStoughton['5/3 ARM'] = remove_tags(fiveThreeARM)
 
 
+def main(): 
+    # ------- abington ------------
+    makeFile(abington, URLabington)
+    abingtonData(abington)
+    # ------- Easton ------------
+    makeFile(easton, URLeaston)
+    eastonData(easton)
+    # ------- Canton ------------
+    makeFile(canton, URLcanton)
+    cantonData(canton)
+    # ------- Sharon ------------
+    makeFile(sharon, URLsharon)
+    sharonData(sharon)
+    # ------- South Shore ------------
+    southshoreData(URLsouthshore)
+    # ------- Canton Again ------------
+    makeFile(cantonagain, URLcantonagain)
+    cantonagainData(cantonagain)
+    # ------- Stoughton ------------
+    makeFile(stoughton, URLstoughton)
+    stoughtonData(stoughton)
 
+def writeToCSV():
+    date = datetime.now().strftime('%a %m-%d-%Y')
+    filename = 'rates.xlsx'
+    combine = date + filename
+    workbook = xlsxwriter.Workbook(combine)
+    worksheet = workbook.add_worksheet()
+    worksheet.set_column('A:A', 30)
+    worksheet.set_column('B2:O2', 15)
+    worksheet.write('A1', str(date))
+    worksheet.write('A2', "Abington Bank")
+    worksheet.write('A3', "Bank of Easton")
+    worksheet.write('A4', "Canton Co-Operative Bank")
+    worksheet.write('A5', "Crescent/Sharon Credit Union")
+    worksheet.write('A6', "South Shore Bank")
+    worksheet.write('A7', "Bank of Canton")
+    worksheet.write('A8', "Stoughton Cooperative Bank")
+    f = 1
+    for k, v in tableRates.items():
+        worksheet.write(0, f, k)
+        worksheet.write(1, f, tableAbington.get(k))
+        worksheet.write(2, f, tableEaston.get(k))
+        worksheet.write(3, f, tableCanton.get(k))
+        worksheet.write(4, f, tableSharon.get(k))
+        worksheet.write(5, f, tableSouthShore.get(k))
+        worksheet.write(6, f, tableCantonAgain.get(k))
+        worksheet.write(7, f, tableStoughton.get(k))
+        f += 1 
+    workbook.close()
 
-    
-
-
-""" # ------- abington ------------
-makeFile(abington, URLabington)
-abingtonData(abington)
-printTable(tableAbington, abington)
-# ------- Easton ------------
-makeFile(easton, URLeaston)
-eastonData(easton)
-printTable(tableEaston, easton)
-# ------- Canton ------------
-makeFile(canton, URLcanton)
-cantonData(canton)
-printTable(tableCanton, canton)
-# ------- Sharon ------------
-makeFile(sharon, URLsharon)
-sharonData(sharon)
-printTable(tableSharon, sharon)
-# ------- South Shore ------------
-# South shore is a special circumstance. Website is JSON, don't need to make a file.
-southshoreData(URLsouthshore)
-printTable(tableSouthShore, "South Shore")
-# ------- Canton Again ------------
-makeFile(cantonagain, URLcantonagain)
-cantonagainData(cantonagain)
-printTable(tableCantonAgain, "Canton, again.")
-# ------- Stoughton ------------"""
-makeFile(stoughton, URLstoughton)
-stoughtonData(stoughton)
-printTable(tableStoughton ,stoughton)
-
+main()
+writeToCSV()
